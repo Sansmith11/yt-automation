@@ -37,10 +37,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // ─────────────────────────────────────────────
 // CONFIG  (edit these for your channel)
 // ─────────────────────────────────────────────
-const CHANNEL_NICHE = "AI and technology tips"; // Your niche
-const LANGUAGE = "en"; // Language code
+const CHANNEL_NICHE = process.env.CHANNEL_NICHE || "AI and technology tips"; // Your niche
+const LANGUAGE = process.env.LANGUAGE || "en";
 const POSTS_PER_DAY = 1;
-const PUBLISH_HOUR = 18; // 6 PM UTC
+const PUBLISH_HOUR = parseInt(process.env.PUBLISH_HOUR || "18", 10);
 const OUTPUT_DIR = path.join(__dirname, "output");
 const ASSETS_DIR = path.join(__dirname, "assets");
 const FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf";

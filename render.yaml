@@ -1,0 +1,32 @@
+## render.yaml — Render Blueprint
+## Deploys the YouTube automation pipeline as a daily Cron Job on Render
+## Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ── Cron Job: runs pipeline.js once per day at 6 AM UTC ──────────────────
+  - type: cron
+    name: yt-automation
+    runtime: node
+    schedule: "0 6 * * *"        # 6:00 AM UTC daily  (11:30 AM IST)
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: node pipeline.js
+    plan: starter                 # starter = billed per second of run time
+
+    envVars:
+      # ── Required secrets — set these in Render Dashboard → Environment ──
+      - key: ANTHROPIC_API_KEY
+        sync: false               # "sync: false" = paste value manually in dashboard
+      - key: PEXELS_API_KEY
+        sync: false
+      - key: YOUTUBE_CLIENT_SECRETS
+        sync: false               # paste full contents of client_secrets.json here
+      - key: YOUTUBE_TOKEN
+        sync: false               # base64 of token.json (see SETUP.md Step 7)
+
+      # ── Optional config — override defaults here ────────────────────────
+      - key: CHANNEL_NICHE
+        value: "AI and technology tips"
+      - key: LANGUAGE
+        value: "en"
+      - key: PUBLISH_HOUR
+        value: "18"
