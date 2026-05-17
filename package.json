@@ -1,0 +1,19 @@
+{
+  "name": "yt-automation-node",
+  "version": "1.0.0",
+  "description": "YouTube AI Shorts automation pipeline — Node.js version",
+  "type": "module",
+  "main": "pipeline.js",
+  "scripts": {
+    "start": "node pipeline.js",
+    "post": "node pipeline.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "canvas": "^2.11.2",
+    "dotenv": "^16.4.5",
+    "googleapis": "^140.0.0",
+    "node-fetch": "^3.3.2",
+    "sharp": "^0.33.4"
+  }
+}
