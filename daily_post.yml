@@ -1,0 +1,52 @@
+# .github/workflows/daily_post.yml
+# ─────────────────────────────────────────────────────────
+# Runs the pipeline every day at 6:00 AM UTC (11:30 AM IST)
+# Completely FREE on GitHub Actions (2000 min/month for public repos)
+
+name: Daily YouTube Post
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # 6:00 AM UTC daily
+  workflow_dispatch:       # Manual trigger button in GitHub UI
+
+jobs:
+  post_video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install FFmpeg
+        run: sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore YouTube OAuth token
+        run: echo "${{ secrets.YOUTUBE_TOKEN }}" | base64 -d > token.pickle
+
+      - name: Restore YouTube client secrets
+        run: echo "${{ secrets.YOUTUBE_CLIENT_SECRETS }}" > client_secrets.json
+
+      - name: Run pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PEXELS_API_KEY:    ${{ secrets.PEXELS_API_KEY }}
+        run: python pipeline.py
+
+      - name: Upload output artifacts (for debugging)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-output-${{ github.run_id }}
+          path: output/
+          retention-days: 3
